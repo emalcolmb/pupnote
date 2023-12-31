@@ -6,6 +6,8 @@ from PIL import Image
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+
+
 # Streamlit app title
 st.title('PupNote')
 st.write("PupNote, for tracking how chubby our chubby bubbys get.")
