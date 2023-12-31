@@ -19,12 +19,18 @@ menu = st.sidebar.selectbox('Menu', ['Home', 'Add New Log Entry', 'Edit/Delete']
 csv_file_path = 'chihuahua_data.csv'
 
 # Function to read or create data from .csv file
+# Function to read or create data from .csv file
 def get_data(file_path):
     try:
-        return pd.read_csv(file_path, parse_dates=['Date'])
+        data = pd.read_csv(file_path)
+        # Convert 'Date' column to datetime if it's not already
+        if 'Date' in data.columns and not data['Date'].dtype == 'datetime64[ns]':
+            data['Date'] = pd.to_datetime(data['Date'])
+        return data
     except FileNotFoundError:
-        # Create a new DataFrame if file not found
+        # Create a new DataFrame if the file is not found
         return pd.DataFrame(columns=['Date', 'Name', 'Daily Weight (oz)'])
+
 
 # Function to update data in the .csv file
 def update_data(file_path, data):
