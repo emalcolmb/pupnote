@@ -32,6 +32,9 @@ def update_data(file_path, data):
 existing_data = get_data(csv_file_path)
 
 if menu == 'Home':
+    # Sort the DataFrame by date
+    existing_data = existing_data.sort_values(by='Date')
+
     # Create a bar chart of daily weights for each dog
     plt.figure(figsize=(10, 6))
     ax = sns.barplot(x=existing_data['Date'].dt.date, y='Daily Weight (oz)', hue='Name', data=existing_data)
@@ -50,6 +53,7 @@ if menu == 'Home':
     # Display Chihuahua health data table
     st.header('Weight Data')
     st.dataframe(existing_data)
+
 
 elif menu == 'Add New Log Entry':
     st.header('Add New Log Entry')
@@ -73,7 +77,7 @@ elif menu == 'Add New Log Entry':
             }
 
             # Append new entry to existing data and update CSV
-            existing_data = existing_data.append(new_entry, ignore_index=True)
+            existing_data = pd.concat([existing_data, pd.DataFrame([new_entry])], ignore_index=True)
             update_data(csv_file_path, existing_data)
             st.success('New log entry added successfully!')
         else:
@@ -94,12 +98,12 @@ elif menu == 'Edit/Delete':
             existing_data.loc[filtered_record.index, 'Daily Weight (oz)'] = edited_weight
             update_data(csv_file_path, existing_data)
             st.success('Record Updated')
-            st.experimental_rerun()
+            st.rerun()
 
         if st.button('Delete Record'):
             existing_data = existing_data.drop(filtered_record.index)
             update_data(csv_file_path, existing_data)
             st.success('Record Deleted')
-            st.experimental_rerun()
+            st.rerun()
     else:
         st.write('No record found for this dog on the selected date.')
